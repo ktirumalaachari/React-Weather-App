@@ -394,7 +394,6 @@ This project is licensed under the **MIT License**. Feel free to use, modify, an
 **K Tirumala Achari**  
 Full Stack Developer | Aspiring Software Engineer
 
-<br/>
 <a href="mailto:ktirumalachari@gmail.com">
   <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail"/>
 </a>
