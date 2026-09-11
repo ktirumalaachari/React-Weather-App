@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* hide scrollbars for hourly strip but keep scroll */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background: #111;
+  color: #fff;
+}
+
+/* ---------- keyframes: slow, calm, minimal ---------- */
+@keyframes drift-slow {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(26px, -18px); }
+}
+@keyframes drift-slower {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-30px, 20px); }
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.06); opacity: 0.92; }
+}
+@keyframes spin-slower {
+  to { transform: rotate(360deg); }
+}
+@keyframes rain-drop {
+  0% { transform: translateY(-6px); opacity: 0; }
+  25% { opacity: 1; }
+  80% { opacity: 0.8; }
+  100% { transform: translateY(26px); opacity: 0; }
+}
+@keyframes snow-fall {
+  0% { transform: translateY(-8px) translateX(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(88px) translateX(10px); opacity: 0; }
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 1; }
+  50% { opacity: 0.4; }
+  55% { opacity: 1; }
+  70% { opacity: 0.7; }
+  75% { opacity: 1; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-drift-slow { animation: drift-slow 11s ease-in-out infinite; }
+.animate-drift-slower { animation: drift-slower 15s ease-in-out infinite; }
+.animate-breathe { animation: breathe 5.5s ease-in-out infinite; }
+.animate-spin-slower { animation: spin-slower 40s linear infinite; }
+.animate-rain-drop { animation: rain-drop 1.4s ease-in infinite; }
+.animate-snow-fall { animation: snow-fall 3.2s ease-in infinite; }
+.animate-flicker { animation: flicker 4s ease-in-out infinite; }
+.animate-marquee { animation: marquee 36s linear infinite; }
+
+/* thin elegant scrollbar for page */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.25);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
