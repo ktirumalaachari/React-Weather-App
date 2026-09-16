@@ -404,7 +404,7 @@ export default function App() {
           className={`sticky top-0 z-30 backdrop-blur-2xl transition-colors duration-1000 ${dark ? "bg-[#0a0b0e]/60" : "bg-[#f4f2ec]/60"} border-b ${dark ? "border-white/10" : "border-black/[0.07]"}`}
         >
           <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-5 sm:px-8">
-            
+            <a
               href="#"
               className="flex items-center gap-2.5"
               onClick={(e) => e.preventDefault()}
@@ -1333,7 +1333,7 @@ function SearchDropdown({
           </div>
         ) : results.length === 0 ? (
           <div className="px-4 py-3.5 text-sm opacity-50">
-            Type at least 2 letters — try "Lisbon", "Osaka", "Lagos"…
+            Type at least 2 letters — try “Lisbon”, “Osaka”, “Lagos”…
           </div>
         ) : (
           results.map((r) => (
