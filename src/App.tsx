@@ -137,6 +137,7 @@ export default function App() {
   const [nowTick, setNowTick] = useState(Date.now());
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const didAutoLocate = useRef(false);
 
   const load = useCallback(async (p: Place, silent = false) => {
     if (!silent) setLoading(true);
@@ -338,6 +339,34 @@ export default function App() {
     );
   };
 
+  // Try the user's real GPS location once on first load. If it's denied,
+  // unsupported, or times out, we silently keep DEFAULT_PLACE — the
+  // "Live" badge below only shows once a real location succeeds, so the
+  // UI never claims a hardcoded fallback city is the user's location.
+  useEffect(() => {
+    if (didAutoLocate.current) return;
+    didAutoLocate.current = true;
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const name = await reverseGeocode(latitude, longitude);
+        pickPlace({
+          name,
+          country: "Current",
+          latitude,
+          longitude,
+          isCurrent: true,
+        });
+      },
+      () => {
+        /* permission denied / timeout — keep default place, no error toast on load */
+      },
+      { timeout: 15000, enableHighAccuracy: true, maximumAge: 60000 },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const toggleFav = () => {
     if (isFav)
       setFavorites((f) =>
@@ -375,7 +404,7 @@ export default function App() {
           className={`sticky top-0 z-30 backdrop-blur-2xl transition-colors duration-1000 ${dark ? "bg-[#0a0b0e]/60" : "bg-[#f4f2ec]/60"} border-b ${dark ? "border-white/10" : "border-black/[0.07]"}`}
         >
           <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-5 sm:px-8">
-            <a
+            
               href="#"
               className="flex items-center gap-2.5"
               onClick={(e) => e.preventDefault()}
@@ -553,10 +582,15 @@ export default function App() {
                   className={`flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] ring-1 ${ringCls}`}
                 >
                   <span className="relative flex h-1.5 w-1.5">
-                    <span className="absolute h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                    {place.isCurrent && (
+                      <span className="absolute h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
+                    )}
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${place.isCurrent ? "bg-emerald-400" : "bg-current opacity-40"}`}
+                    />
                   </span>
-                  Live · {weather.timezone.replace(/_/g, " ")}
+                  {place.isCurrent ? "Live" : "Preset"} ·{" "}
+                  {weather.timezone.replace(/_/g, " ")}
                 </span>
                 <span
                   className={`font-mono text-[11px] uppercase tracking-[0.18em] ${textFaint}`}
@@ -1299,7 +1333,7 @@ function SearchDropdown({
           </div>
         ) : results.length === 0 ? (
           <div className="px-4 py-3.5 text-sm opacity-50">
-            Type at least 2 letters — try “Lisbon”, “Osaka”, “Lagos”…
+            Type at least 2 letters — try "Lisbon", "Osaka", "Lagos"…
           </div>
         ) : (
           results.map((r) => (
